@@ -23,11 +23,9 @@
         "test":       "bundle exec rspec-queue --max-requeues=3 --timeout 180 --queue $REDIS_URL || { cat log/test_order.log;  $(exit 1); }"
       },
       "buildpacks": [
-        { "url": "heroku/ruby" },
         { "url": "https://github.com/heroku/heroku-buildpack-apt" },
         { "url": "https://github.com/heroku/heroku-buildpack-cli.git" },
-        { "url": "https://github.com/heroku/heroku-buildpack-google-chrome.git" },
-        { "url": "https://github.com/heroku/heroku-buildpack-chromedriver.git" }
+        { "url": "heroku/ruby" }
       ]
     }
   }
