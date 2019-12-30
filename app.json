@@ -25,6 +25,8 @@
       "buildpacks": [
         { "url": "https://github.com/heroku/heroku-buildpack-apt" },
         { "url": "https://github.com/heroku/heroku-buildpack-cli.git" },
+        { "url": "https://github.com/heroku/heroku-buildpack-google-chrome.git" },
+        { "url": "https://github.com/heroku/heroku-buildpack-chromedriver.git" },
         { "url": "heroku/ruby" }
       ]
     }
