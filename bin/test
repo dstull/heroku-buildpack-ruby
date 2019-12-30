@@ -7,9 +7,7 @@ BUILDPACK_DIR=$(dirname $BIN_DIR)
 
 ${BIN_DIR}/support/chrome_compile $@
 
-ls ${HOME}/.apt; ls ${HOME}/.profile.d
-pwd
-echo "HOME is: ${HOME}"
+source ${HOME}/.profile.d/000_apt.sh
 source ${HOME}/.profile.d/010_google-chrome.sh
 
 env
