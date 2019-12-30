@@ -55,8 +55,12 @@ module LanguagePack
       env_dir = Pathname.new("#{path}")
       if env_dir.exist? && env_dir.directory?
         env_dir.each_child do |file|
-          key   = file.basename.to_s
-          value = file.read.strip
+          if file.directory?
+            Kernel.puts "-----> Skipping #{file} since it is a directory"
+            next
+          end
+          key                = file.basename.to_s
+          value              = file.read.strip
           user_env_hash[key] = value unless blacklist?(key)
         end
       end
@@ -105,7 +109,7 @@ module LanguagePack
     # @param [String] command to be run
     # @return [String] output of stdout
     def run_no_pipe(command, options = {})
-      run(command, options.merge({:out => ""}))
+      run(command, options.merge({ :out => "" }))
     end
 
     # run a shell command and pipe stderr to stdout
@@ -129,7 +133,7 @@ module LanguagePack
       options[:env] ||= {}
       options[:out] ||= "2>&1"
       options[:env] = user_env_hash.merge(options[:env]) if options[:user_env]
-      env = options[:env].map {|key, value| "#{key.shellescape}=#{value.shellescape}" }.join(" ")
+      env           = options[:env].map { |key, value| "#{key.shellescape}=#{value.shellescape}" }.join(" ")
       "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
     end
 
@@ -171,9 +175,9 @@ module LanguagePack
           options[:out] = ">> #{@file} 2>&1"
         end
 
-        @command       = command_options_to_string(command, options)
-        @did_time_out  = false
-        @success       = false
+        @command      = command_options_to_string(command, options)
+        @did_time_out = false
+        @success      = false
       end
 
       def output
@@ -192,7 +196,8 @@ module LanguagePack
         @success
       end
 
-    private
+      private
+
       def exec_once
         return if @exec_once
         @exec_once = true
@@ -285,16 +290,17 @@ module LanguagePack
     end
 
     private
-      def private_log(name, key_value_hash)
-        File.open(ENV["BUILDPACK_LOG_FILE"] || "/dev/null", "a+") do |f|
-          key_value_hash.each do |key, value|
-            metric = String.new("#{name}#")
-            metric << "#{ENV["BPLOG_PREFIX"]}"
-            metric << "." unless metric.end_with?('.')
-            metric << "#{key}=#{value}"
-            f.puts metric
-          end
+
+    def private_log(name, key_value_hash)
+      File.open(ENV["BUILDPACK_LOG_FILE"] || "/dev/null", "a+") do |f|
+        key_value_hash.each do |key, value|
+          metric = String.new("#{name}#")
+          metric << "#{ENV["BPLOG_PREFIX"]}"
+          metric << "." unless metric.end_with?('.')
+          metric << "#{key}=#{value}"
+          f.puts metric
         end
       end
+    end
   end
 end
