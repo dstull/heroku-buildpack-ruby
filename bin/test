@@ -5,13 +5,16 @@
 BIN_DIR=$(cd $(dirname $0); pwd)
 BUILDPACK_DIR=$(dirname $BIN_DIR)
 
+${BIN_DIR}/support/chrome_compile $@
+
+ls ${HOME}/.apt; ls ${HOME}/.profile.d
+pwd
+echo "HOME is: ${HOME}"
+source ${HOME}/.profile.d/010_google-chrome.sh
+
+env
+
 source "$BIN_DIR/support/bash_functions.sh"
 heroku_buildpack_ruby_install_ruby "$BIN_DIR" "$BUILDPACK_DIR"
-
-env
-
-$BIN_DIR/support/chrome_compile $@
-
-env
 
 $heroku_buildpack_ruby_dir/bin/ruby $BIN_DIR/support/ruby_test $@
